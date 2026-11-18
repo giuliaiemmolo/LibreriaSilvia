@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>La libreria</title>
+<title>La mia libreria</title>
 <meta name="theme-color" content="#3B4F38">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Libreria">
@@ -271,12 +271,14 @@ function drawGrid() {
 function render() {
   const app = $('#app');
   if (!user) {
-    app.innerHTML = `<form class="login" id="lg"><h1>La libreria di Silvia</h1><p class="au">Accedi per vedere i tuoi libri.</p><label>Email<input name="e" type="email" autocomplete="username" required></label><label>Password<input name="p" type="password" autocomplete="current-password" required></label><p class="err" id="er"></p><button>Entra</button></form>`;
+    app.innerHTML = `<form class="login" id="lg"><h1>La mia libreria</h1><p class="au">Accedi per vedere i tuoi libri.</p><label>Email<input name="e" type="email" autocomplete="username" required></label><label>Password<input name="p" type="password" autocomplete="current-password" required></label><p class="err" id="er"></p><button>Entra</button></form>`;
     $('#lg').onsubmit = async e => { e.preventDefault(); const {error} = await sb.auth.signInWithPassword({email:e.target.e.value.trim(), password:e.target.p.value}); if (error) $('#er').textContent = 'Email o password non corretti.'; };
     return;
   }
   const h = location.hash === '#home' ? 'home' : 'lib';
-  const head = t => `<div class="topbar"><a class="brand" href="#libreria">${LOGO}La libreria di Silvia</a><button class="link" id="out">Esci</button></div><div class="pg">${DECO}<h1>${t}</h1><nav class="tabs"><a href="#libreria" class="${h == 'lib' ? 'on' : ''}">Libreria</a><a href="#home" class="${h == 'home' ? 'on' : ''}">Aggiungi</a></nav></div>`;
+  const nome = user.user_metadata?.nome || (user.email || '').split('@')[0];
+  document.title = `La libreria di ${nome}`;
+  const head = t => `<div class="topbar"><a class="brand" href="#libreria">${LOGO}La libreria di ${esc(nome)}</a><button class="link" id="out">Esci</button></div><div class="pg">${DECO}<h1>${t}</h1><nav class="tabs"><a href="#libreria" class="${h == 'lib' ? 'on' : ''}">Libreria</a><a href="#home" class="${h == 'home' ? 'on' : ''}">Aggiungi</a></nav></div>`;
   if (h === 'home') {
     app.innerHTML = head('Aggiungi un libro') + `<main><section class="hero"><p>Scansiona il codice a barre sul retro: titolo, autore e copertina arrivano da soli.</p></section>
     <div class="actions"><button class="big" id="scan">Scansiona il codice a barre</button><label class="big alt">Carica una foto del codice<input type="file" id="photo" accept="image/*" hidden></label></div>
