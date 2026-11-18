@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La libreria di Silvia</title>
+<meta name="theme-color" content="#16302B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Libreria">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF2EC;--ink:#16302B;--mut:#5C716B;--card:#fff;--acc:#8A2F4B;--line:#D3DCD4;--r:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+body.lock{overflow:hidden}
+h1,h2,h3,.brand{font-family:Fraunces,Georgia,serif;margin:0}
+a{color:inherit}
+header{background:var(--ink);color:#F4F1E8;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-size:1.2rem;text-decoration:none;font-weight:700}
+nav{display:flex;gap:16px;align-items:center}
+nav a{text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+nav a.on{border-color:#E7B8C8}
+button,.big{font:inherit;cursor:pointer;border:0;border-radius:var(--r);padding:12px 18px;background:var(--acc);color:#fff;font-weight:600;text-align:center;display:block}
+button.alt,.big.alt{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+button.danger{background:#fff;color:#A3262A;border:1.5px solid #A3262A}
+button.link{background:none;color:inherit;padding:4px;text-decoration:underline;font-weight:400}
+:focus-visible{outline:3px solid #E0A526;outline-offset:2px}
+main{max-width:980px;margin:0 auto;padding:24px 16px 48px}
+.hero h1{font-size:clamp(1.8rem,6vw,2.8rem);line-height:1.1;max-width:14em}
+.hero p{color:var(--mut);max-width:34em}
+.actions{display:grid;gap:12px;max-width:420px;margin:24px 0 16px}
+.big{padding:16px 18px;font-size:1.05rem}
+.manual{display:flex;gap:8px;max-width:420px;margin-bottom:12px}
+input,select,textarea{font:inherit;width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.manual button{white-space:nowrap}
+.bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:20px}
+.bar input{grid-column:1/-1}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:20px 14px}
+.card{background:none;color:var(--ink);padding:0;text-align:left;font-weight:400;border-radius:6px}
+.cv{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px 6px 6px 3px;box-shadow:inset 3px 0 0 rgba(0,0,0,.12),0 2px 6px rgba(22,48,43,.25);background:#C9D6CC;display:block}
+.ph{display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font:600 .85rem Fraunces,serif;background:var(--acc);color:#fff;overflow:hidden}
+.card b{display:block;line-height:1.25;margin-top:8px;font-size:.95rem}
+.card small,.au{color:var(--mut)}
+.pill{display:inline-block;font-size:.78rem;padding:1px 9px;border-radius:99px;border:1.5px solid var(--ink);margin-top:4px}
+.pill.letto{background:var(--ink);color:#fff}.pill.leggendo{background:#E7B8C8;border-color:#E7B8C8}
+.star{color:#C58A12;letter-spacing:1px}
+.badge{font-size:.78rem;color:var(--acc);font-weight:600}
+.empty{color:var(--mut);grid-column:1/-1}
+#modal{position:fixed;inset:0;background:rgba(10,24,21,.55);display:flex;align-items:flex-end;justify-content:center;z-index:9}
+#modal[hidden]{display:none}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;padding:20px 18px calc(20px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0}
+@media(min-width:700px){#modal{align-items:center}.sheet{border-radius:16px}}
+.top{display:flex;gap:14px;margin-bottom:12px}.top .cv{width:96px;flex:none}.top>div{flex:1}
+h3{margin:18px 0 6px;font-size:1.05rem}
+dl{margin:0}dl div{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line)}dt{width:42%;color:var(--mut)}dd{margin:0;flex:1}
+.desc{color:var(--mut);font-size:.92rem}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+form label{display:block;margin:10px 0 0;font-size:.9rem;color:var(--mut)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+video{width:100%;border-radius:var(--r);background:#000;aspect-ratio:4/3;object-fit:cover}
+.dup{display:flex;gap:12px;margin:12px 0}.dup .cv{width:70px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;z-index:20;max-width:90vw}
+#toast[hidden]{display:none}
+.login{max-width:360px;margin:12vh auto;padding:0 16px}
+.login h1{margin-bottom:6px}.login .err{color:#A3262A;min-height:1.4em}
+</style></head>
+<body>
+<div id="app"></div><div id="modal" hidden></div><div id="toast" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
+<script>
+// ====== CONFIGURAZIONE: incolla qui i due valori di Supabase (Project Settings > API) ======
+const SUPABASE_URL = 'https://sbxamhfvxscyiunnwnlh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNieGFtaGZ2eHNjeWl1bm53bmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5NTc1MTIsImV4cCI6MjExMDUzMzUxMn0._3G5zfe3QfEwFXOZMSxNhTsA6W6K3jnJH5Zvia33gTQ';
+// ===========================================================================================
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const GEN = ['Romanzo','Classici','Fantasy','Fantascienza','Giallo / Thriller','Horror','Romance','Storico','Biografia','Saggio','Poesia','Fumetti','Ragazzi','Altro'];
+const ST = {da_leggere:'Da leggere', leggendo:'Leggendo', letto:'Letto'};
+const FMT = ['Cartaceo','Ebook','Audiolibro'];
+let user = null, books = [], filt = {q:'', st:'', gen:'', so:'recenti'}, reader = null, tt;
+
+const toast = (m, ms = 2800) => { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); if (ms) tt = setTimeout(() => t.hidden = true, ms); };
+function modal(h) { const m = $('#modal'); m.innerHTML = `<div class="sheet">${h}</div>`; m.hidden = false; document.body.classList.add('lock'); m.onclick = e => { if (e.target === m) closeM(); }; }
+function closeM() { stopScan(); $('#modal').hidden = true; document.body.classList.remove('lock'); }
+function stopScan() { if (reader) { try { reader.reset(); } catch (e) {} reader = null; } }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeM(); });
+
+const stars = n => n ? `<span class="star" aria-label="${n} stelle su 5">${'★'.repeat(n)}${'☆'.repeat(5 - n)}</span>` : '';
+const fd = d => d ? new Date(d).toLocaleDateString('it-IT') : '';
+const thumb = b => b.cover ? `<img class="cv" src="${esc(b.cover)}" alt="" loading="lazy">` : `<div class="cv ph">${esc(b.title)}</div>`;
+function mapGenre(c = '') {
+  c = c.toLowerCase();
+  const m = [[/fantasy/,'Fantasy'],[/science fiction|fantascienza/,'Fantascienza'],[/mystery|thriller|crime|detective|giallo/,'Giallo / Thriller'],[/horror/,'Horror'],[/romance/,'Romance'],[/histor|stori/,'Storico'],[/biograph|memoir|autobio/,'Biografia'],[/poetry|poesi/,'Poesia'],[/comic|graphic/,'Fumetti'],[/juvenile|young adult|children|ragazz/,'Ragazzi'],[/classic/,'Classici'],[/fiction|narrativa|romanz|novel/,'Romanzo'],[/self-help|business|science|philosoph|psycholog|religion|social|political|essay|saggi|cooking|art|computers|education|economics/,'Saggio']];
+  for (const [r, g] of m) if (r.test(c)) return g;
+  return '';
+}
+
+// ---------- ricerca libro online ----------
+async function gb(i) {
+  const j = await (await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + i)).json();
+  const v = j.items?.[0]?.volumeInfo; if (!v) return null;
+  const L = {it:'Italiano', en:'Inglese', fr:'Francese', de:'Tedesco', es:'Spagnolo'};
+  return {isbn:i, title:v.title || '', authors:(v.authors || []).join(', '), publisher:v.publisher || '', year:(v.publishedDate || '').slice(0, 4), pages:v.pageCount || null, language:L[v.language] || v.language || '', description:(v.description || '').replace(/<[^>]+>/g, ' ').trim(), cover:(v.imageLinks?.thumbnail || '').replace('http:', 'https:'), genre:mapGenre((v.categories || []).join(' '))};
+}
+async function ol(i) {
+  const v = (await (await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${i}&format=json&jscmd=data`)).json())['ISBN:' + i]; if (!v) return null;
+  return {isbn:i, title:v.title || '', authors:(v.authors || []).map(a => a.name).join(', '), publisher:v.publishers?.[0]?.name || '', year:(v.publish_date || '').match(/\d{4}/)?.[0] || '', pages:v.number_of_pages || null, cover:v.cover?.medium || '', genre:mapGenre((v.subjects || []).map(s => s.name).join(' '))};
+}
+async function lookup(raw) {
+  const isbn = String(raw).replace(/[^0-9Xx]/g, '');
+  if (isbn.length < 10) return toast('ISBN non valido: servono 10 o 13 cifre.');
+  toast('Cerco il libro…', 0);
+  const g = await gb(isbn).catch(() => null);
+  const o = (!g || !g.cover || !g.publisher || !g.pages) ? await ol(isbn).catch(() => null) : null;
+  let d = (g || o) ? {...(o || {}), ...Object.fromEntries(Object.entries(g || {}).filter(([k, v]) => v))} : null;
+  if (!d) { toast('Libro non trovato online: inserisci i dati a mano.'); d = {isbn}; } else $('#toast').hidden = true;
+  const same = (a, b) => (a || '').toLowerCase() === (b || '').toLowerCase();
+  const dup = books.find(b => (b.isbn && b.isbn === isbn) || (d.title && same(b.title, d.title) && same(b.authors, d.authors)));
+  dup ? dupDlg(dup, d) : form(d);
+}
+
+// ---------- scansione ----------
+async function scan() {
+  modal(`<h2>Inquadra il codice a barre</h2><p class="au">Tienilo ben illuminato, a circa 15 cm.</p><video id="v" playsinline muted></video><div class="row"><button class="alt" id="x">Annulla</button></div>`);
+  $('#x').onclick = closeM;
+  reader = new ZXing.BrowserMultiFormatReader();
+  try {
+    await reader.decodeFromVideoDevice(null, 'v', r => { if (r) { const t = r.getText(); if (/^\d{10,13}$/.test(t)) { closeM(); lookup(t); } } });
+  } catch (e) { closeM(); toast('Fotocamera non disponibile: consenti l\'accesso oppure usa la foto o l\'ISBN.', 4500); }
+}
+async function fromPhoto(f) {
+  if (!f) return;
+  const url = URL.createObjectURL(f);
+  try { const r = await new ZXing.BrowserMultiFormatReader().decodeFromImageUrl(url); lookup(r.getText()); }
+  catch (e) { toast('Codice non letto: prova con una foto più nitida o scrivi l\'ISBN.', 4500); }
+}
+
+// ---------- dati ----------
+async function load() {
+  const {data, error} = await sb.from('books').select('*').order('created_at', {ascending:false});
+  if (error) toast('Errore di caricamento: ' + error.message, 5000); else books = data;
+}
+
+// ---------- schede ----------
+function sel(k, l, opts, v, empty) {
+  const o = Array.isArray(opts) ? Object.fromEntries(opts.map(x => [x, x])) : opts;
+  if (v && !(v in o)) o[v] = v;
+  return `<label>${l}<select name="${k}">${empty ? '<option value="">—</option>' : ''}${Object.entries(o).map(([a, b]) => `<option value="${esc(a)}" ${a == v ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select></label>`;
+}
+function form(d) {
+  const f = (k, l, t = 'text', r = '') => `<label>${l}<input name="${k}" type="${t}" value="${esc(d[k])}" ${r}></label>`;
+  modal(`<h2>${d.id ? 'Modifica libro' : 'Controlla e salva'}</h2>
+  <form id="f"><div class="top">${d.cover ? thumb(d) : ''}<div>${f('title', 'Titolo', 'text', 'required')}${f('authors', 'Autori (separati da virgola)')}</div></div>
+  <input type="hidden" name="cover" value="${esc(d.cover)}">
+  <h3>Il libro</h3>${f('publisher', 'Casa editrice')}${f('edition', 'Edizione')}
+  <div class="g2">${f('year', 'Anno', 'number')}${f('pages', 'Pagine', 'number')}${f('language', 'Lingua')}${f('isbn', 'ISBN')}</div>
+  ${sel('genre', 'Genere', GEN, d.genre, 1)}
+  <label>Descrizione<textarea name="description" rows="4">${esc(d.description)}</textarea></label>
+  <h3>Per te</h3>
+  <div class="g2">${sel('status', 'Stato', ST, d.status || 'da_leggere')}${sel('rating', 'Voto', {1:'★',2:'★★',3:'★★★',4:'★★★★',5:'★★★★★'}, d.rating, 1)}
+  ${f('purchase_date', 'Data di acquisto', 'date')}${sel('format', 'Formato', FMT, d.format, 1)}
+  ${f('start_date', 'Iniziato il', 'date')}${f('end_date', 'Finito il', 'date')}</div>
+  ${f('place', 'Acquistato presso')}${f('copies', 'Copie possedute', 'number', 'min="1"')}
+  <label>Note<textarea name="notes" rows="3">${esc(d.notes)}</textarea></label>
+  <div class="row"><button type="submit">Salva libro</button><button type="button" class="alt" id="x">Annulla</button></div></form>`);
+  $('#x').onclick = closeM;
+  $('#f').copies.value = d.copies || 1;
+  $('#f').onsubmit = async e => {
+    e.preventDefault();
+    const o = Object.fromEntries(new FormData(e.target));
+    ['pages', 'rating', 'copies'].forEach(k => o[k] = o[k] ? +o[k] : null);
+    ['purchase_date', 'start_date', 'end_date'].forEach(k => o[k] = o[k] || null);
+    o.copies = o.copies || 1;
+    const {error} = await (d.id ? sb.from('books').update(o).eq('id', d.id) : sb.from('books').insert(o));
+    if (error) return toast('Errore: ' + error.message, 5000);
+    await load(); closeM(); toast('Libro salvato'); location.hash = '#libreria'; render();
+  };
+}
+function dupDlg(b, d) {
+  modal(`<h2>Questo libro è già in libreria</h2><div class="dup">${thumb(b)}<div><b>${esc(b.title)}</b><br>${esc(b.authors)}<br><small class="au">${esc(b.publisher)} ${esc(b.year)} · ${b.copies || 1} ${(b.copies || 1) > 1 ? 'copie' : 'copia'}</small></div></div>
+  <p>È un errore o ne hai una seconda copia?</p>
+  <div class="row"><button id="d2">Ho due copie</button><button class="alt" id="de">È un'altra edizione</button><button class="link" id="dx">È un errore</button></div>`);
+  $('#d2').onclick = async () => { const n = (b.copies || 1) + 1; await sb.from('books').update({copies:n}).eq('id', b.id); await load(); closeM(); toast('Ora hai ' + n + ' copie'); location.hash = '#libreria'; render(); };
+  $('#de').onclick = () => form(d);
+  $('#dx').onclick = () => { closeM(); detail(b.id); };
+}
+function detail(id) {
+  const b = books.find(x => x.id == id); if (!b) return;
+  const r = (l, v) => v || v === 0 ? `<div><dt>${l}</dt><dd>${esc(v)}</dd></div>` : '';
+  modal(`<div class="top">${thumb(b)}<div><h2>${esc(b.title)}</h2><p class="au">${esc(b.authors)}</p><span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.rating)}</div></div>
+  <h3>Per te</h3><dl>${r('Acquistato il', fd(b.purchase_date))}${r('Iniziato il', fd(b.start_date))}${r('Finito il', fd(b.end_date))}${r('Formato', b.format)}${r('Acquistato presso', b.place)}${r('Copie', b.copies > 1 ? b.copies : '')}${r('Note', b.notes)}</dl>
+  <h3>Sul libro</h3><dl>${r('Casa editrice', b.publisher)}${r('Edizione', b.edition)}${r('Anno', b.year)}${r('Genere', b.genre)}${r('Pagine', b.pages)}${r('Lingua', b.language)}${r('ISBN', b.isbn)}</dl>
+  ${b.description ? `<p class="desc">${esc(b.description)}</p>` : ''}
+  <div class="row"><button id="ed">Modifica</button><button class="danger" id="del">Elimina</button><button class="link" id="cl">Chiudi</button></div>`);
+  $('#cl').onclick = closeM;
+  $('#ed').onclick = () => form(b);
+  $('#del').onclick = async () => {
+    if (!confirm(`Eliminare "${b.title}" dalla libreria?`)) return;
+    const {error} = await sb.from('books').delete().eq('id', id);
+    if (error) return toast('Errore: ' + error.message, 5000);
+    await load(); closeM(); render(); toast('Libro eliminato');
+  };
+}
+
+// ---------- pagine ----------
+function drawGrid() {
+  const q = filt.q.toLowerCase();
+  const l = books.filter(b => (!filt.st || b.status === filt.st) && (!filt.gen || b.genre === filt.gen) && (!q || (b.title + ' ' + (b.authors || '')).toLowerCase().includes(q)));
+  if (filt.so === 'titolo') l.sort((a, b) => a.title.localeCompare(b.title, 'it'));
+  if (filt.so === 'voto') l.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  $('#grid').innerHTML = l.length ? l.map(b => `<button class="card" data-id="${b.id}">${thumb(b)}<b>${esc(b.title)}</b><small>${esc(b.authors)}</small><br><span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.rating)} ${(b.copies || 1) > 1 ? `<span class="badge">×${b.copies}</span>` : ''}</button>`).join('')
+    : `<p class="empty">${books.length ? 'Nessun libro corrisponde ai filtri.' : 'La libreria è vuota. Aggiungi il primo libro dalla pagina Aggiungi.'}</p>`;
+  document.querySelectorAll('.card').forEach(c => c.onclick = () => detail(c.dataset.id));
+}
+function render() {
+  const app = $('#app');
+  if (!user) {
+    app.innerHTML = `<form class="login" id="lg"><h1>La libreria di Silvia</h1><p class="au">Accedi per vedere i tuoi libri.</p><label>Email<input name="e" type="email" autocomplete="username" required></label><label>Password<input name="p" type="password" autocomplete="current-password" required></label><p class="err" id="er"></p><button>Entra</button></form>`;
+    $('#lg').onsubmit = async e => { e.preventDefault(); const {error} = await sb.auth.signInWithPassword({email:e.target.e.value.trim(), password:e.target.p.value}); if (error) $('#er').textContent = 'Email o password non corretti.'; };
+    return;
+  }
+  const h = location.hash === '#libreria' ? 'lib' : 'home';
+  const head = `<header><a class="brand" href="#home">La libreria di Silvia</a><nav><a href="#home" class="${h == 'home' ? 'on' : ''}">Aggiungi</a><a href="#libreria" class="${h == 'lib' ? 'on' : ''}">Libreria</a><button class="link" id="out">Esci</button></nav></header>`;
+  if (h === 'home') {
+    app.innerHTML = head + `<main><section class="hero"><h1>Quale libro hai in mano?</h1><p>Scansiona il codice a barre sul retro: titolo, autore e copertina arrivano da soli.</p></section>
+    <div class="actions"><button class="big" id="scan">Scansiona il codice a barre</button><label class="big alt">Carica una foto del codice<input type="file" id="photo" accept="image/*" hidden></label></div>
+    <div class="manual"><input id="isbn" inputmode="numeric" placeholder="Oppure scrivi l'ISBN"><button id="go">Cerca</button></div>
+    <button class="link" id="hand">Inserisci i dati a mano</button></main>`;
+    $('#scan').onclick = scan;
+    $('#photo').onchange = e => fromPhoto(e.target.files[0]);
+    $('#go').onclick = () => lookup($('#isbn').value);
+    $('#isbn').onkeydown = e => { if (e.key === 'Enter') lookup(e.target.value); };
+    $('#hand').onclick = () => form({});
+  } else {
+    app.innerHTML = head + `<main><div class="bar"><input id="q" type="search" placeholder="Cerca titolo o autore" value="${esc(filt.q)}">
+    ${sel('st', 'Stato', ST, filt.st, 1).replace(/<\/?label[^>]*>/g, '').replace('<select', '<select id="fs"').replace('>—<', '>Tutti gli stati<')}
+    ${sel('gen', 'Genere', GEN, filt.gen, 1).replace(/<\/?label[^>]*>/g, '').replace('<select', '<select id="fg"').replace('>—<', '>Tutti i generi<')}
+    <select id="so"><option value="recenti">Più recenti</option><option value="titolo">Titolo A–Z</option><option value="voto">Voto</option></select></div><div id="grid"></div></main>`;
+    $('#so').value = filt.so;
+    $('#q').oninput = e => { filt.q = e.target.value; drawGrid(); };
+    $('#fs').onchange = e => { filt.st = e.target.value; drawGrid(); };
+    $('#fg').onchange = e => { filt.gen = e.target.value; drawGrid(); };
+    $('#so').onchange = e => { filt.so = e.target.value; drawGrid(); };
+    drawGrid();
+  }
+  $('#out').onclick = () => sb.auth.signOut();
+}
+window.addEventListener('hashchange', render);
+sb.auth.onAuthStateChange((_, s) => { user = s?.user || null; setTimeout(async () => { if (user) await load(); else books = []; render(); }, 0); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script></body></html>
