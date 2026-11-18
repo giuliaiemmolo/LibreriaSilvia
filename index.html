@@ -181,13 +181,17 @@ function form(d) {
   <div class="fr"><span>Titolo *</span><input name="title" required value="${esc(d.title)}" placeholder="Inserisci il titolo"></div>
   <div class="fr"><span>Autore *</span><input name="authors" required value="${esc(d.authors)}" placeholder="Inserisci l'autore"></div>
   <div class="fr"><span>Genere</span><select name="genre">${opts(GEN, d.genre, 'Seleziona un genere')}</select></div>
+  <div class="fr"><span>Data di acquisto</span><input name="purchase_date" type="date" value="${esc(d.purchase_date)}"></div>
   <div class="fr"><span>Stato di lettura</span><div class="seg">${Object.entries(ST).map(([k, v]) => `<label><input type="radio" name="status" value="${k}" ${k == st ? 'checked' : ''}><i>${v}</i></label>`).join('')}</div></div>
-  <div class="fr"><span>Voto</span><div class="stars" id="stv">${[1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="${n} stelle">★</button>`).join('')}</div></div>
+  <div id="vt" style="display:${st == 'letto' ? 'block' : 'none'}">
+    <div class="fr"><span>Voto</span><div class="stars" id="stv">${[1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="${n} stelle">★</button>`).join('')}</div></div>
+    <div class="fr"><span>Spiegazione del voto</span><textarea name="rating_note" rows="3" placeholder="Perché questo voto? (facoltativo)">${esc(d.rating_note)}</textarea></div>
+  </div>
   <div class="fr"><span>Note</span><textarea name="notes" rows="3" placeholder="Aggiungi una nota…">${esc(d.notes)}</textarea></div>
   <details><summary>Altri dettagli del libro</summary>${f('publisher', 'Casa editrice')}${f('edition', 'Edizione')}
   <div class="g2">${f('year', 'Anno', 'number')}${f('pages', 'Pagine', 'number')}${f('language', 'Lingua')}${f('isbn', 'ISBN')}</div>
   <label>Descrizione<textarea name="description" rows="4">${esc(d.description)}</textarea></label>
-  <div class="g2">${f('purchase_date', 'Data di acquisto', 'date')}${sel('format', 'Formato', FMT, d.format, 1)}${f('start_date', 'Iniziato il', 'date')}${f('end_date', 'Finito il', 'date')}</div>
+  <div class="g2">${sel('format', 'Formato', FMT, d.format, 1)}${f('start_date', 'Iniziato il', 'date')}${f('end_date', 'Finito il', 'date')}</div>
   ${f('place', 'Acquistato presso')}${f('copies', 'Copie possedute', 'number', 'min="1"')}</details>
   <div class="btns"><button type="button" class="alt" id="x">Annulla</button><button type="submit">Salva libro</button></div></form>`);
   const fm = $('#f');
@@ -195,6 +199,7 @@ function form(d) {
   fm.copies.value = d.copies || 1;
   const paint = v => document.querySelectorAll('#stv button').forEach(b => b.classList.toggle('on', +b.dataset.n <= v));
   paint(d.rating || 0);
+  fm.querySelectorAll('input[name="status"]').forEach(r => r.onchange = () => { $('#vt').style.display = fm.status.value == 'letto' ? 'block' : 'none'; });
   $('#stv').onclick = e => { const b = e.target.closest('button'); if (!b) return; const n = +b.dataset.n; fm.rating.value = fm.rating.value == n ? '' : n; paint(+fm.rating.value || 0); };
   $('#cvf').onchange = e => {
     const fl = e.target.files[0]; if (!fl) return;
@@ -208,6 +213,7 @@ function form(d) {
     ['pages', 'rating', 'copies'].forEach(k => o[k] = o[k] ? +o[k] : null);
     ['purchase_date', 'start_date', 'end_date'].forEach(k => o[k] = o[k] || null);
     o.copies = o.copies || 1;
+    if (o.status !== 'letto') { o.rating = null; o.rating_note = null; } else o.rating_note = (o.rating_note || '').trim() || null;
     const {error} = await (d.id ? sb.from('books').update(o).eq('id', d.id) : sb.from('books').insert(o));
     if (error) return toast('Errore: ' + error.message, 5000);
     await load(); closeM(); toast('Libro salvato'); location.hash = '#libreria'; render();
@@ -224,8 +230,8 @@ function dupDlg(b, d) {
 function detail(id) {
   const b = books.find(x => x.id == id); if (!b) return;
   const r = (l, v) => v || v === 0 ? `<div><dt>${l}</dt><dd>${esc(v)}</dd></div>` : '';
-  modal(`<div class="top">${thumb(b)}<div><h2>${esc(b.title)}</h2><p class="au">${esc(b.authors)}</p><span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.rating)}</div></div>
-  <h3>Per te</h3><dl>${r('Acquistato il', fd(b.purchase_date))}${r('Iniziato il', fd(b.start_date))}${r('Finito il', fd(b.end_date))}${r('Formato', b.format)}${r('Acquistato presso', b.place)}${r('Copie', b.copies > 1 ? b.copies : '')}${r('Note', b.notes)}</dl>
+  modal(`<div class="top">${thumb(b)}<div><h2>${esc(b.title)}</h2><p class="au">${esc(b.authors)}</p><span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.status == 'letto' ? b.rating : 0)}</div></div>
+  <h3>Per te</h3><dl>${r('Acquistato il', fd(b.purchase_date))}${r('Iniziato il', fd(b.start_date))}${r('Finito il', fd(b.end_date))}${r('Formato', b.format)}${r('Acquistato presso', b.place)}${r('Copie', b.copies > 1 ? b.copies : '')}${r('Spiegazione del voto', b.status == 'letto' ? b.rating_note : '')}${r('Note', b.notes)}</dl>
   <h3>Sul libro</h3><dl>${r('Casa editrice', b.publisher)}${r('Edizione', b.edition)}${r('Anno', b.year)}${r('Genere', b.genre)}${r('Pagine', b.pages)}${r('Lingua', b.language)}${r('ISBN', b.isbn)}</dl>
   ${b.description ? `<p class="desc">${esc(b.description)}</p>` : ''}
   <div class="row"><button id="ed">Modifica</button><button class="danger" id="del">Elimina</button><button class="link" id="cl">Chiudi</button></div>`);
@@ -259,7 +265,7 @@ function drawGrid() {
   if (filt.so === 'titolo') l.sort((a, b) => a.title.localeCompare(b.title, 'it'));
   if (filt.so === 'voto') l.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   $('#cnt').textContent = l.length + (l.length === 1 ? ' libro' : ' libri');
-  $('#list').innerHTML = l.length ? l.map(b => `<article class="bk" data-id="${b.id}">${thumb(b)}<div class="in"><h3>${esc(b.title)}</h3><p>${esc(b.authors)}</p>${b.genre ? `<span class="pill g">${esc(b.genre)}</span>` : ''}<span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.rating)} ${(b.copies || 1) > 1 ? `<span class="badge">×${b.copies}</span>` : ''}</div><div class="act"><button class="ib" data-e="${b.id}" aria-label="Modifica">${IC.e}</button><button class="ib" data-d="${b.id}" aria-label="Elimina">${IC.d}</button></div></article>`).join('')
+  $('#list').innerHTML = l.length ? l.map(b => `<article class="bk" data-id="${b.id}">${thumb(b)}<div class="in"><h3>${esc(b.title)}</h3><p>${esc(b.authors)}</p>${b.genre ? `<span class="pill g">${esc(b.genre)}</span>` : ''}<span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.status == 'letto' ? b.rating : 0)} ${(b.copies || 1) > 1 ? `<span class="badge">×${b.copies}</span>` : ''}</div><div class="act"><button class="ib" data-e="${b.id}" aria-label="Modifica">${IC.e}</button><button class="ib" data-d="${b.id}" aria-label="Elimina">${IC.d}</button></div></article>`).join('')
     : `<p class="empty">${books.length ? 'Nessun libro corrisponde ai filtri.' : 'La libreria è vuota. Tocca "Aggiungi libro" per iniziare.'}</p>`;
 }
 function render() {
