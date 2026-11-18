@@ -88,6 +88,7 @@ function closeM() { stopScan(); $('#modal').hidden = true; document.body.classLi
 function stopScan() { if (reader) { try { reader.reset(); } catch (e) {} reader = null; } }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeM(); });
 
+const okIsbn = s => s.length === 13 ? [...s].reduce((a, c, i) => a + c * (i % 2 ? 3 : 1), 0) % 10 === 0 : s.length === 10 ? [...s].reduce((a, c, i) => a + (/x/i.test(c) ? 10 : +c) * (10 - i), 0) % 11 === 0 : false;
 const stars = n => n ? `<span class="star" aria-label="${n} stelle su 5">${'★'.repeat(n)}${'☆'.repeat(5 - n)}</span>` : '';
 const fd = d => d ? new Date(d).toLocaleDateString('it-IT') : '';
 const thumb = b => b.cover ? `<img class="cv" src="${esc(b.cover)}" alt="" loading="lazy">` : `<div class="cv ph">${esc(b.title)}</div>`;
@@ -100,10 +101,16 @@ function mapGenre(c = '') {
 
 // ---------- ricerca libro online ----------
 async function gb(i) {
-  const j = await (await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + i)).json();
-  const v = j.items?.[0]?.volumeInfo; if (!v) return null;
   const L = {it:'Italiano', en:'Inglese', fr:'Francese', de:'Tedesco', es:'Spagnolo'};
-  return {isbn:i, title:v.title || '', authors:(v.authors || []).join(', '), publisher:v.publisher || '', year:(v.publishedDate || '').slice(0, 4), pages:v.pageCount || null, language:L[v.language] || v.language || '', description:(v.description || '').replace(/<[^>]+>/g, ' ').trim(), cover:(v.imageLinks?.thumbnail || '').replace('http:', 'https:'), genre:mapGenre((v.categories || []).join(' '))};
+  for (const q of ['isbn:' + i, i]) {
+    const r = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q);
+    if (!r.ok) throw new Error('errore ' + r.status);
+    const j = await r.json();
+    const it = q === 'isbn:' + i ? j.items?.[0] : j.items?.find(x => (x.volumeInfo.industryIdentifiers || []).some(y => y.identifier === i));
+    const v = it?.volumeInfo; if (!v) continue;
+    return {isbn:i, title:v.title || '', authors:(v.authors || []).join(', '), publisher:v.publisher || '', year:(v.publishedDate || '').slice(0, 4), pages:v.pageCount || null, language:L[v.language] || v.language || '', description:(v.description || '').replace(/<[^>]+>/g, ' ').trim(), cover:(v.imageLinks?.thumbnail || '').replace('http:', 'https:'), genre:mapGenre((v.categories || []).join(' '))};
+  }
+  return null;
 }
 async function ol(i) {
   const v = (await (await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${i}&format=json&jscmd=data`)).json())['ISBN:' + i]; if (!v) return null;
@@ -111,12 +118,13 @@ async function ol(i) {
 }
 async function lookup(raw) {
   const isbn = String(raw).replace(/[^0-9Xx]/g, '');
-  if (isbn.length < 10) return toast('ISBN non valido: servono 10 o 13 cifre.');
+  if (!okIsbn(isbn)) return toast('ISBN non valido: controlla le cifre (10 o 13).', 4500);
   toast('Cerco il libro…', 0);
-  const g = await gb(isbn).catch(() => null);
+  let ge = null;
+  const g = await gb(isbn).catch(e => { ge = e; return null; });
   const o = (!g || !g.cover || !g.publisher || !g.pages) ? await ol(isbn).catch(() => null) : null;
   let d = (g || o) ? {...(o || {}), ...Object.fromEntries(Object.entries(g || {}).filter(([k, v]) => v))} : null;
-  if (!d) { toast('Libro non trovato online: inserisci i dati a mano.'); d = {isbn}; } else $('#toast').hidden = true;
+  if (!d) { toast(ge ? 'Google Books non risponde (' + ge.message + '): riprova tra poco o inserisci i dati a mano.' : 'Libro non trovato online (ISBN ' + isbn + '): inserisci i dati a mano.', 6000); d = {isbn}; } else $('#toast').hidden = true;
   const same = (a, b) => (a || '').toLowerCase() === (b || '').toLowerCase();
   const dup = books.find(b => (b.isbn && b.isbn === isbn) || (d.title && same(b.title, d.title) && same(b.authors, d.authors)));
   dup ? dupDlg(dup, d) : form(d);
@@ -128,7 +136,7 @@ async function scan() {
   $('#x').onclick = closeM;
   reader = new ZXing.BrowserMultiFormatReader();
   try {
-    await reader.decodeFromVideoDevice(null, 'v', r => { if (r) { const t = r.getText(); if (/^\d{10,13}$/.test(t)) { closeM(); lookup(t); } } });
+    await reader.decodeFromVideoDevice(null, 'v', r => { if (r) { const t = r.getText(); if (/^\d{10,13}$/.test(t) && okIsbn(t)) { closeM(); lookup(t); } } });
   } catch (e) { closeM(); toast('Fotocamera non disponibile: consenti l\'accesso oppure usa la foto o l\'ISBN.', 4500); }
 }
 async function fromPhoto(f) {
