@@ -74,6 +74,7 @@ video{width:100%;border-radius:var(--r);background:#000;aspect-ratio:4/3;object-
 const SUPABASE_URL = 'https://sbxamhfvxscyiunnwnlh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNieGFtaGZ2eHNjeWl1bm53bmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5NTc1MTIsImV4cCI6MjExMDUzMzUxMn0._3G5zfe3QfEwFXOZMSxNhTsA6W6K3jnJH5Zvia33gTQ';
 // ===========================================================================================
+const GB_KEY = 'AIzaSyBqPThix9CNLGta-P3DmHMV9ks3RhKdkq0'; // chiave Google Books (facoltativa ma consigliata): incollala tra gli apici
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -103,7 +104,7 @@ function mapGenre(c = '') {
 async function gb(i) {
   const L = {it:'Italiano', en:'Inglese', fr:'Francese', de:'Tedesco', es:'Spagnolo'};
   for (const q of ['isbn:' + i, i]) {
-    const r = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q);
+    const r = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q + (GB_KEY ? '&key=' + GB_KEY : ''));
     if (!r.ok) throw new Error('errore ' + r.status);
     const j = await r.json();
     const it = q === 'isbn:' + i ? j.items?.[0] : j.items?.find(x => (x.volumeInfo.industryIdentifiers || []).some(y => y.identifier === i));
