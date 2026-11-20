@@ -10,14 +10,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F4EDE0;--card:#FCFAF4;--ink:#3A2A20;--mut:#7B6B5D;--g:#4E6B45;--gd:#3B4F38;--line:#DDD1BE;--beige:#EBDDC6;--amb:#F4E0B0}
+:root{--bg:#F4EDE0;--card:#FCFAF4;--ink:#3A2A20;--mut:#7B6B5D;--g:#4E6B45;--gd:#3B4F38;--line:#DDD1BE;--beige:#EBDDC6;--amb:#F4E0B0;--pill-g-bg:#DCE6CF;--pill-g-ink:#2F4A2A;--pick-bg:#F3F7EE;--fab-sh:rgba(59,79,56,.4);--deco-stem:#6B8A5A;--deco-leaf:#7C9A6B;--deco-bk:#4F6B48}
+body[data-theme="rosso"]{--g:#9E3B33;--gd:#7A2822;--line:#E0CBC6;--beige:#EFE0DC;--pill-g-bg:#F3D6D2;--pill-g-ink:#69201A;--pick-bg:#F9EFED;--fab-sh:rgba(158,59,51,.38);--deco-stem:#A8544D;--deco-leaf:#C06B63;--deco-bk:#8F352E}
 *{box-sizing:border-box}
 body{margin:0;background:linear-gradient(#F7F1E6,#F1E9DA) fixed;color:var(--ink);font:16px/1.5 Nunito,system-ui,sans-serif;min-height:100vh}
 body.lock{overflow:hidden}
 h1,h2,h3,.brand{font-family:'Playfair Display',Georgia,serif;margin:0}
 a{color:inherit}
-.topbar{background:var(--gd);color:#F6EEDD;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;display:flex;align-items:center;justify-content:space-between}
+.topbar{background:var(--gd);color:#F6EEDD;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .brand{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:600;text-decoration:none}
+.top-r{display:flex;align-items:center;gap:12px}
+.theme-lbl{font-size:.85rem;display:flex;align-items:center;gap:6px;margin:0;color:#F6EEDD}
+.theme-lbl select{width:auto;padding:4px 8px;border-radius:8px;font-size:.85rem;border:1px solid rgba(246,238,221,.35);background:rgba(255,253,249,.95);color:var(--ink)}
 .pg{position:relative;max-width:760px;margin:0 auto;padding:22px 18px 0;overflow:hidden}
 .pg h1{font-size:clamp(2rem,8vw,2.8rem);font-weight:700;line-height:1.1}
 .pg h1::after{content:"";display:block;width:70px;height:3px;border-radius:3px;background:var(--g);margin-top:8px}
@@ -43,21 +47,21 @@ input,select,textarea{font:inherit;width:100%;padding:11px 14px;border:1.5px sol
 .cnt{color:var(--mut);margin:0}
 .sel-tools{display:flex;gap:8px;align-items:center}
 .bk{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(80,60,30,.1);cursor:pointer;border:2px solid transparent;transition:border-color .15s,background .15s}
-.bk.picked{border-color:var(--g);background:#F3F7EE}
+.bk.picked{border-color:var(--g);background:var(--pick-bg)}
 .bk .cv{width:68px;flex:none}.in{flex:1;min-width:0}
 .in h3{font-size:1.1rem;line-height:1.25;font-weight:700}.in p{margin:2px 0 0;color:var(--mut)}
 .act{display:flex;gap:8px}
 .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:12px}
 .chk{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);background:#FFFDF9;display:grid;place-items:center;flex:none;color:#fff;font-weight:700;font-size:.9rem}
 .bk.picked .chk{background:var(--g);border-color:var(--g)}
-@media(max-width:480px){.act{flex-direction:column}}
+@media(max-width:480px){.act{flex-direction:column}.brand{font-size:1.05rem}.theme-lbl span{display:none}}
 .cv{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px 6px 6px 3px;box-shadow:inset 3px 0 0 rgba(0,0,0,.12),0 2px 6px rgba(60,40,20,.3);background:#C9D6CC;display:block}
 .ph{display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font:600 .78rem 'Playfair Display',serif;background:var(--g);color:#fff;overflow:hidden}
 .pill{display:inline-block;font-size:.8rem;font-weight:600;padding:2px 11px;border-radius:99px;margin:6px 6px 0 0;background:var(--beige)}
-.pill.g,.pill.letto{background:#DCE6CF;color:#2F4A2A}.pill.leggendo{background:var(--amb)}
+.pill.g,.pill.letto{background:var(--pill-g-bg);color:var(--pill-g-ink)}.pill.leggendo{background:var(--amb)}
 .star{color:#C58A12;letter-spacing:1px}.badge{font-size:.8rem;color:var(--g);font-weight:700}
 .empty{color:var(--mut);text-align:center;padding:30px 0}
-.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));border-radius:99px;padding:15px 22px;box-shadow:0 6px 16px rgba(59,79,56,.4);z-index:5;font-size:1rem}
+.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));border-radius:99px;padding:15px 22px;box-shadow:0 6px 16px var(--fab-sh);z-index:5;font-size:1rem}
 .bulkbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));width:min(724px,calc(100vw - 28px));background:var(--gd);color:#F6EEDD;padding:12px 16px;border-radius:18px;box-shadow:0 8px 24px rgba(30,25,15,.35);display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:6}
 .bulkbar[hidden]{display:none}
 .bulkbar .info{font-weight:700;font-size:.95rem}
@@ -106,14 +110,42 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const GEN = ['Narrativa','Classici','Fantasy','Fantascienza','Giallo / Thriller','Horror','Romance','Storico','Biografia','Saggistica','Poesia','Fumetti','Ragazzi','Altro'];
 const ST = {da_leggere:'Da leggere', leggendo:'In lettura', letto:'Letto'};
 const FMT = ['Cartaceo','Ebook','Audiolibro'];
+const THEMES = {verde:'Verde', rosso:'Rosso'};
 let user = null, books = [], filt = {q:'', st:'', gen:'', so:'recenti'}, reader = null, tt;
 let selectMode = false, selectedIds = new Set();
+let currentTheme = 'verde';
 
 const toast = (m, ms = 2800) => { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); if (ms) tt = setTimeout(() => t.hidden = true, ms); };
 function modal(h) { const m = $('#modal'); m.innerHTML = `<div class="sheet">${h}</div>`; m.hidden = false; document.body.classList.add('lock'); m.onclick = e => { if (e.target === m) closeM(); }; }
 function closeM() { stopScan(); $('#modal').hidden = true; document.body.classList.remove('lock'); }
 function stopScan() { if (reader) { try { reader.reset(); } catch (e) {} reader = null; } }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeM(); });
+
+// ---------- gestione tema (separato per account) ----------
+const themeStorageKey = u => u?.id ? `lib_theme_${u.id}` : 'lib_theme_guest';
+
+function applyTheme(t, u = user) {
+  currentTheme = THEMES[t] ? t : 'verde';
+  document.body.dataset.theme = currentTheme;
+  const meta = $('meta[name="theme-color"]');
+  if (meta) meta.content = currentTheme === 'rosso' ? '#7A2822' : '#3B4F38';
+  if (u?.id) localStorage.setItem(themeStorageKey(u), currentTheme);
+  const sel = $('#themeSel');
+  if (sel) sel.value = currentTheme;
+}
+
+async function setTheme(t) {
+  if (!user) {
+    applyTheme(t, null);
+    return toast(`Tema impostato su ${THEMES[currentTheme]}`);
+  }
+  applyTheme(t, user);
+  const {data, error} = await sb.auth.updateUser({data: {theme: currentTheme}});
+  if (error) return toast('Tema applicato qui, errore salvataggio account: ' + error.message, 4000);
+  if (data?.user) user = data.user;
+  toast(`Tema salvato per ${user.email}: ${THEMES[currentTheme]}`);
+}
+applyTheme('verde', null);
 
 const okIsbn = s => s.length === 13 ? [...s].reduce((a, c, i) => a + c * (i % 2 ? 3 : 1), 0) % 10 === 0 : s.length === 10 ? [...s].reduce((a, c, i) => a + (/x/i.test(c) ? 10 : +c) * (10 - i), 0) % 11 === 0 : false;
 const stars = n => n ? `<span class="star" aria-label="${n} stelle su 5">${'★'.repeat(n)}${'☆'.repeat(5 - n)}</span>` : '';
@@ -352,7 +384,7 @@ const IC = {
   e: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
   d: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/></svg>'};
 const LOGO = '<svg viewBox="0 0 24 24" width="28" height="28" fill="#F3E9D7" aria-hidden="true"><rect x="3" y="5" width="4" height="15" rx="1"/><rect x="8.5" y="3" width="4" height="17" rx="1"/><rect x="14" y="6" width="4" height="14" rx="1" transform="rotate(8 16 13)"/></svg>';
-const DECO = '<svg class="deco" viewBox="0 0 160 110" aria-hidden="true"><path d="M20 80c20-10 30-30 45-62" stroke="#6B8A5A" fill="none" stroke-width="2"/><g fill="#7C9A6B"><ellipse cx="38" cy="30" rx="16" ry="7" transform="rotate(-30 38 30)"/><ellipse cx="62" cy="14" rx="16" ry="7" transform="rotate(-65 62 14)"/><ellipse cx="22" cy="54" rx="16" ry="7" transform="rotate(-10 22 54)"/><ellipse cx="50" cy="52" rx="14" ry="6" transform="rotate(-40 50 52)"/></g><rect x="40" y="86" width="112" height="13" rx="2" fill="#9A6B4B"/><rect x="52" y="73" width="96" height="13" rx="2" fill="#4F6B48"/></svg>';
+const DECO = '<svg class="deco" viewBox="0 0 160 110" aria-hidden="true"><path d="M20 80c20-10 30-30 45-62" stroke="var(--deco-stem)" fill="none" stroke-width="2"/><g fill="var(--deco-leaf)"><ellipse cx="38" cy="30" rx="16" ry="7" transform="rotate(-30 38 30)"/><ellipse cx="62" cy="14" rx="16" ry="7" transform="rotate(-65 62 14)"/><ellipse cx="22" cy="54" rx="16" ry="7" transform="rotate(-10 22 54)"/><ellipse cx="50" cy="52" rx="14" ry="6" transform="rotate(-40 50 52)"/></g><rect x="40" y="86" width="112" height="13" rx="2" fill="#9A6B4B"/><rect x="52" y="73" width="96" height="13" rx="2" fill="var(--deco-bk)"/></svg>';
 const opts = (o, v, e) => (e ? `<option value="">${e}</option>` : '') + Object.entries(Array.isArray(o) ? Object.fromEntries(o.map(x => [x, x])) : o).map(([a, b]) => `<option value="${esc(a)}" ${a == v ? 'selected' : ''}>${esc(b)}</option>`).join('');
 async function delBook(id) {
   const b = books.find(x => x.id == id);
@@ -409,7 +441,14 @@ function render() {
   const h = location.hash === '#home' ? 'home' : 'lib';
   const nome = user.user_metadata?.nome || (user.email || '').split('@')[0];
   document.title = `La libreria di ${nome}`;
-  const head = t => `<div class="topbar"><a class="brand" href="#libreria">${LOGO}La libreria di ${esc(nome)}</a><button class="link" id="out">Esci</button></div><div class="pg">${DECO}<h1>${t}</h1><nav class="tabs"><a href="#libreria" class="${h == 'lib' ? 'on' : ''}">Libreria</a><a href="#home" class="${h == 'home' ? 'on' : ''}">Aggiungi</a></nav></div>`;
+  const head = t => `<div class="topbar">
+    <a class="brand" href="#libreria">${LOGO}La libreria di ${esc(nome)}</a>
+    <div class="top-r">
+      <label class="theme-lbl"><span>Tema</span><select id="themeSel" aria-label="Tema colore">${Object.entries(THEMES).map(([k, v]) => `<option value="${k}" ${currentTheme === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+      <button class="link" id="out">Esci</button>
+    </div>
+  </div><div class="pg">${DECO}<h1>${t}</h1><nav class="tabs"><a href="#libreria" class="${h == 'lib' ? 'on' : ''}">Libreria</a><a href="#home" class="${h == 'home' ? 'on' : ''}">Aggiungi</a></nav></div>`;
+
   if (h === 'home') {
     selectMode = false; selectedIds.clear();
     app.innerHTML = head('Aggiungi un libro') + `<main><section class="hero"><p>Scansiona il codice a barre sul retro: titolo, autore e copertina arrivano da soli.</p></section>
@@ -483,9 +522,32 @@ function render() {
     };
     drawGrid();
   }
-  $('#out').onclick = () => sb.auth.signOut();
+
+  $('#themeSel').onchange = e => setTheme(e.target.value);
+  $('#out').onclick = async () => {
+    await sb.auth.signOut({scope: 'local'}).catch(() => {});
+    Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k); });
+    user = null;
+    books = [];
+    selectMode = false;
+    selectedIds.clear();
+    applyTheme('verde', null);
+    render();
+  };
 }
+
 window.addEventListener('hashchange', render);
-sb.auth.onAuthStateChange((_, s) => { user = s?.user || null; setTimeout(async () => { if (user) await load(); else books = []; render(); }, 0); });
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+sb.auth.onAuthStateChange((_, s) => {
+  user = s?.user || null;
+  if (user) {
+    const savedTheme = user.user_metadata?.theme || localStorage.getItem(themeStorageKey(user)) || 'verde';
+    applyTheme(savedTheme, user);
+  } else {
+    applyTheme('verde', null);
+  }
+  setTimeout(async () => { if (user) await load(); else books = []; render(); }, 0);
+});
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js');
+}
 </script></body></html>
