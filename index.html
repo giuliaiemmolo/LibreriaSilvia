@@ -25,11 +25,12 @@ a{color:inherit}
 .tabs{display:flex;gap:26px;margin-top:22px;border-bottom:1.5px solid var(--line)}
 .tabs a{padding:8px 2px;text-decoration:none;font-weight:600;color:var(--mut);border-bottom:3px solid transparent;margin-bottom:-1.5px}
 .tabs a.on{color:var(--ink);border-color:var(--g)}
-main{max-width:760px;margin:0 auto;padding:20px 18px 110px}
+main{max-width:760px;margin:0 auto;padding:20px 18px 120px}
 button,.big{font:inherit;cursor:pointer;border:0;border-radius:14px;padding:12px 18px;background:var(--g);color:#fff;font-weight:700;text-align:center;display:block}
 button.alt,.big.alt{background:var(--card);color:var(--gd);border:1.5px solid var(--line)}
 button.danger{background:var(--card);color:#A3262A;border:1.5px solid #D9B0AE}
 button.link{background:none;color:inherit;padding:4px;text-decoration:underline;font-weight:400}
+button.sm{padding:7px 13px;font-size:.88rem;border-radius:10px}
 :focus-visible{outline:3px solid #C58A12;outline-offset:2px}
 input,select,textarea{font:inherit;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FFFDF9;color:var(--ink)}
 .hero p{color:var(--mut);max-width:34em;margin:0}
@@ -38,12 +39,17 @@ input,select,textarea{font:inherit;width:100%;padding:11px 14px;border:1.5px sol
 .manual{display:flex;gap:8px;max-width:420px;margin-bottom:12px}.manual button{white-space:nowrap}
 .bar{margin-bottom:6px}.bar input{margin-bottom:12px}
 .flt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.flt label{font-size:.85rem;color:var(--mut)}.flt select{margin-top:4px;padding:10px 8px}
-.cnt{color:var(--mut);margin:14px 0 10px}
-.bk{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(80,60,30,.1);cursor:pointer}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 10px;flex-wrap:wrap}
+.cnt{color:var(--mut);margin:0}
+.sel-tools{display:flex;gap:8px;align-items:center}
+.bk{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(80,60,30,.1);cursor:pointer;border:2px solid transparent;transition:border-color .15s,background .15s}
+.bk.picked{border-color:var(--g);background:#F3F7EE}
 .bk .cv{width:68px;flex:none}.in{flex:1;min-width:0}
 .in h3{font-size:1.1rem;line-height:1.25;font-weight:700}.in p{margin:2px 0 0;color:var(--mut)}
 .act{display:flex;gap:8px}
 .ib{width:42px;height:42px;padding:0;display:grid;place-items:center;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:12px}
+.chk{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);background:#FFFDF9;display:grid;place-items:center;flex:none;color:#fff;font-weight:700;font-size:.9rem}
+.bk.picked .chk{background:var(--g);border-color:var(--g)}
 @media(max-width:480px){.act{flex-direction:column}}
 .cv{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px 6px 6px 3px;box-shadow:inset 3px 0 0 rgba(0,0,0,.12),0 2px 6px rgba(60,40,20,.3);background:#C9D6CC;display:block}
 .ph{display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font:600 .78rem 'Playfair Display',serif;background:var(--g);color:#fff;overflow:hidden}
@@ -52,6 +58,11 @@ input,select,textarea{font:inherit;width:100%;padding:11px 14px;border:1.5px sol
 .star{color:#C58A12;letter-spacing:1px}.badge{font-size:.8rem;color:var(--g);font-weight:700}
 .empty{color:var(--mut);text-align:center;padding:30px 0}
 .fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));border-radius:99px;padding:15px 22px;box-shadow:0 6px 16px rgba(59,79,56,.4);z-index:5;font-size:1rem}
+.bulkbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));width:min(724px,calc(100vw - 28px));background:var(--gd);color:#F6EEDD;padding:12px 16px;border-radius:18px;box-shadow:0 8px 24px rgba(30,25,15,.35);display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:6}
+.bulkbar[hidden]{display:none}
+.bulkbar .info{font-weight:700;font-size:.95rem}
+.bulkbar .b-acts{display:flex;gap:8px}
+.bulkbar button.alt{background:transparent;color:#F6EEDD;border-color:rgba(246,238,221,.35)}
 #modal{position:fixed;inset:0;background:rgba(40,30,20,.5);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 #modal[hidden]{display:none}
 .sheet{background:var(--card);width:100%;max-width:640px;max-height:92vh;overflow:auto;padding:22px 18px calc(22px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0}
@@ -72,9 +83,10 @@ details summary{cursor:pointer;font-weight:700;margin:16px 0 4px}
 form label{display:block;margin:10px 0 0;font-size:.9rem;color:var(--mut)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .btns{display:grid;grid-template-columns:1fr 1.4fr;gap:12px;margin-top:20px}
+.hint-box{background:var(--beige);padding:10px 14px;border-radius:12px;font-size:.88rem;color:var(--ink);margin:10px 0 14px}
 video{width:100%;border-radius:14px;background:#000;aspect-ratio:4/3;object-fit:cover}
 .dup{display:flex;gap:12px;margin:12px 0}.dup .cv{width:70px}
-#toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--gd);color:#fff;padding:10px 16px;border-radius:99px;z-index:20;max-width:90vw}
+#toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--gd);color:#fff;padding:10px 16px;border-radius:99px;z-index:20;max-width:90vw}
 #toast[hidden]{display:none}
 .login{max-width:360px;margin:12vh auto;padding:0 18px}.login h1{margin-bottom:6px}.login .err{color:#A3262A;min-height:1.4em}
 </style></head>
@@ -87,7 +99,7 @@ video{width:100%;border-radius:14px;background:#000;aspect-ratio:4/3;object-fit:
 const SUPABASE_URL = 'https://sbxamhfvxscyiunnwnlh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNieGFtaGZ2eHNjeWl1bm53bmxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5NTc1MTIsImV4cCI6MjExMDUzMzUxMn0._3G5zfe3QfEwFXOZMSxNhTsA6W6K3jnJH5Zvia33gTQ';
 // ===========================================================================================
-const GB_KEY = 'AIzaSyBqPThix9CNLGta-P3DmHMV9ks3RhKdkq0'; // chiave Google Books (facoltativa ma consigliata): incollala tra gli apici
+const GB_KEY = 'AIzaSyBqPThix9CNLGta-P3DmHMV9ks3RhKdkq0';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -95,6 +107,7 @@ const GEN = ['Narrativa','Classici','Fantasy','Fantascienza','Giallo / Thriller'
 const ST = {da_leggere:'Da leggere', leggendo:'In lettura', letto:'Letto'};
 const FMT = ['Cartaceo','Ebook','Audiolibro'];
 let user = null, books = [], filt = {q:'', st:'', gen:'', so:'recenti'}, reader = null, tt;
+let selectMode = false, selectedIds = new Set();
 
 const toast = (m, ms = 2800) => { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); if (ms) tt = setTimeout(() => t.hidden = true, ms); };
 function modal(h) { const m = $('#modal'); m.innerHTML = `<div class="sheet">${h}</div>`; m.hidden = false; document.body.classList.add('lock'); m.onclick = e => { if (e.target === m) closeM(); }; }
@@ -219,6 +232,95 @@ function form(d) {
     await load(); closeM(); toast('Libro salvato'); location.hash = '#libreria'; render();
   };
 }
+
+// ---------- modifica multipla ----------
+function bulkForm() {
+  const count = selectedIds.size;
+  if (!count) return;
+  modal(`<h2>Modifica ${count} ${count === 1 ? 'libro' : 'libri'}</h2>
+  <p class="hint-box">Compila <b>solo</b> i campi che vuoi cambiare su tutti i libri selezionati. Quelli lasciati su "Non modificare" o vuoti manterranno il valore attuale di ciascun libro. (ISBN, titolo, autore e copertina non vengono modificati).</p>
+  <form id="bf">
+    <input type="hidden" name="rating" value="">
+    <div class="fr"><span>Genere</span><select name="genre">${opts(GEN, '', '— Non modificare —')}</select></div>
+    <div class="fr"><span>Stato di lettura</span><div class="seg">
+      <label><input type="radio" name="status" value="" checked><i>Non modificare</i></label>
+      ${Object.entries(ST).map(([k, v]) => `<label><input type="radio" name="status" value="${k}"><i>${v}</i></label>`).join('')}
+    </div></div>
+    <div id="bvt" style="display:none">
+      <div class="fr"><span>Voto</span><div class="stars" id="bstv">${[1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="${n} stelle">★</button>`).join('')}</div></div>
+      <div class="fr"><span>Spiegazione voto</span><textarea name="rating_note" rows="2" placeholder="Lascia vuoto per non modificare"></textarea></div>
+    </div>
+    <div class="fr"><span>Formato</span><select name="format">${opts(FMT, '', '— Non modificare —')}</select></div>
+    <div class="fr"><span>Data acquisto</span><input name="purchase_date" type="date"></div>
+    <div class="fr"><span>Note</span><textarea name="notes" rows="2" placeholder="Lascia vuoto per non modificare (sovrascrive le note esistenti)"></textarea></div>
+    <details><summary>Altri dettagli modificabili in blocco</summary>
+      <label>Casa editrice<input name="publisher" type="text" placeholder="Lascia vuoto per non modificare"></label>
+      <div class="g2">
+        <label>Lingua<input name="language" type="text" placeholder="Non modificare"></label>
+        <label>Acquistato presso<input name="place" type="text" placeholder="Non modificare"></label>
+        <label>Iniziato il<input name="start_date" type="date"></label>
+        <label>Finito il<input name="end_date" type="date"></label>
+      </div>
+    </details>
+    <div class="btns"><button type="button" class="alt" id="bx">Annulla</button><button type="submit">Applica a ${count} ${count === 1 ? 'libro' : 'libri'}</button></div>
+  </form>`);
+
+  const fm = $('#bf');
+  $('#bx').onclick = closeM;
+  const paint = v => document.querySelectorAll('#bstv button').forEach(b => b.classList.toggle('on', +b.dataset.n <= v));
+  fm.querySelectorAll('input[name="status"]').forEach(r => r.onchange = () => {
+    $('#bvt').style.display = fm.status.value === 'letto' ? 'block' : 'none';
+  });
+  $('#bstv').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const n = +b.dataset.n;
+    fm.rating.value = fm.rating.value == n ? '' : n;
+    paint(+fm.rating.value || 0);
+  };
+
+  fm.onsubmit = async e => {
+    e.preventDefault();
+    const raw = Object.fromEntries(new FormData(e.target));
+    const patch = {};
+
+    if (raw.genre) patch.genre = raw.genre;
+    if (raw.format) patch.format = raw.format;
+    if (raw.purchase_date) patch.purchase_date = raw.purchase_date;
+    if (raw.start_date) patch.start_date = raw.start_date;
+    if (raw.end_date) patch.end_date = raw.end_date;
+    if (raw.publisher.trim()) patch.publisher = raw.publisher.trim();
+    if (raw.language.trim()) patch.language = raw.language.trim();
+    if (raw.place.trim()) patch.place = raw.place.trim();
+    if (raw.notes.trim()) patch.notes = raw.notes.trim();
+
+    if (raw.status) {
+      patch.status = raw.status;
+      if (raw.status !== 'letto') {
+        patch.rating = null;
+        patch.rating_note = null;
+      } else {
+        if (raw.rating) patch.rating = +raw.rating;
+        if (raw.rating_note.trim()) patch.rating_note = raw.rating_note.trim();
+      }
+    }
+
+    if (!Object.keys(patch).length) {
+      return toast('Non hai selezionato nessuna modifica da applicare.');
+    }
+
+    const ids = [...selectedIds];
+    const {error} = await sb.from('books').update(patch).in('id', ids);
+    if (error) return toast('Errore: ' + error.message, 5000);
+
+    await load();
+    selectedIds.clear();
+    selectMode = false;
+    closeM();
+    render();
+    toast(`Aggiornati ${ids.length} ${ids.length === 1 ? 'libro' : 'libri'}`);
+  };
+}
+
 function dupDlg(b, d) {
   modal(`<h2>Questo libro è già in libreria</h2><div class="dup">${thumb(b)}<div><b>${esc(b.title)}</b><br>${esc(b.authors)}<br><small class="au">${esc(b.publisher)} ${esc(b.year)} · ${b.copies || 1} ${(b.copies || 1) > 1 ? 'copie' : 'copia'}</small></div></div>
   <p>È un errore o ne hai una seconda copia?</p>
@@ -259,14 +361,43 @@ async function delBook(id) {
   if (error) return toast('Errore: ' + error.message, 5000);
   await load(); closeM(); render(); toast('Libro eliminato');
 }
-function drawGrid() {
+function getFilteredBooks() {
   const q = filt.q.toLowerCase();
   const l = books.filter(b => (!filt.st || b.status === filt.st) && (!filt.gen || b.genre === filt.gen) && (!q || (b.title + ' ' + (b.authors || '')).toLowerCase().includes(q)));
   if (filt.so === 'titolo') l.sort((a, b) => a.title.localeCompare(b.title, 'it'));
   if (filt.so === 'voto') l.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  return l;
+}
+function updateBulkUI(visibleList) {
+  const n = selectedIds.size;
+  const bar = $('#bulkbar');
+  const fab = $('#add');
+  if (bar) {
+    bar.hidden = !(selectMode && n > 0);
+    if (!bar.hidden) $('#binfo').textContent = `${n} ${n === 1 ? 'selezionato' : 'selezionati'}`;
+  }
+  if (fab) fab.hidden = selectMode;
+  const allBtn = $('#selall');
+  if (allBtn && visibleList) {
+    const allPicked = visibleList.length > 0 && visibleList.every(b => selectedIds.has(String(b.id)));
+    allBtn.textContent = allPicked ? 'Deseleziona visibili' : 'Seleziona visibili';
+  }
+}
+function drawGrid() {
+  const l = getFilteredBooks();
   $('#cnt').textContent = l.length + (l.length === 1 ? ' libro' : ' libri');
-  $('#list').innerHTML = l.length ? l.map(b => `<article class="bk" data-id="${b.id}">${thumb(b)}<div class="in"><h3>${esc(b.title)}</h3><p>${esc(b.authors)}</p>${b.genre ? `<span class="pill g">${esc(b.genre)}</span>` : ''}<span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.status == 'letto' ? b.rating : 0)} ${(b.copies || 1) > 1 ? `<span class="badge">×${b.copies}</span>` : ''}</div><div class="act"><button class="ib" data-e="${b.id}" aria-label="Modifica">${IC.e}</button><button class="ib" data-d="${b.id}" aria-label="Elimina">${IC.d}</button></div></article>`).join('')
+  $('#list').innerHTML = l.length ? l.map(b => {
+    const idStr = String(b.id);
+    const picked = selectMode && selectedIds.has(idStr);
+    return `<article class="bk ${picked ? 'picked' : ''}" data-id="${idStr}">
+      ${selectMode ? `<div class="chk" aria-hidden="true">${picked ? '✓' : ''}</div>` : ''}
+      ${thumb(b)}
+      <div class="in"><h3>${esc(b.title)}</h3><p>${esc(b.authors)}</p>${b.genre ? `<span class="pill g">${esc(b.genre)}</span>` : ''}<span class="pill ${b.status}">${ST[b.status]}</span> ${stars(b.status == 'letto' ? b.rating : 0)} ${(b.copies || 1) > 1 ? `<span class="badge">×${b.copies}</span>` : ''}</div>
+      ${selectMode ? '' : `<div class="act"><button class="ib" data-e="${idStr}" aria-label="Modifica">${IC.e}</button><button class="ib" data-d="${idStr}" aria-label="Elimina">${IC.d}</button></div>`}
+    </article>`;
+  }).join('')
     : `<p class="empty">${books.length ? 'Nessun libro corrisponde ai filtri.' : 'La libreria è vuota. Tocca "Aggiungi libro" per iniziare.'}</p>`;
+  updateBulkUI(l);
 }
 function render() {
   const app = $('#app');
@@ -280,6 +411,7 @@ function render() {
   document.title = `La libreria di ${nome}`;
   const head = t => `<div class="topbar"><a class="brand" href="#libreria">${LOGO}La libreria di ${esc(nome)}</a><button class="link" id="out">Esci</button></div><div class="pg">${DECO}<h1>${t}</h1><nav class="tabs"><a href="#libreria" class="${h == 'lib' ? 'on' : ''}">Libreria</a><a href="#home" class="${h == 'home' ? 'on' : ''}">Aggiungi</a></nav></div>`;
   if (h === 'home') {
+    selectMode = false; selectedIds.clear();
     app.innerHTML = head('Aggiungi un libro') + `<main><section class="hero"><p>Scansiona il codice a barre sul retro: titolo, autore e copertina arrivano da soli.</p></section>
     <div class="actions"><button class="big" id="scan">Scansiona il codice a barre</button><label class="big alt">Carica una foto del codice<input type="file" id="photo" accept="image/*" hidden></label></div>
     <div class="manual"><input id="isbn" inputmode="numeric" placeholder="Oppure scrivi l'ISBN"><button id="go">Cerca</button></div>
@@ -292,15 +424,62 @@ function render() {
   } else {
     app.innerHTML = head('Libreria') + `<main><div class="bar"><input id="q" type="search" placeholder="Cerca titolo o autore…" value="${esc(filt.q)}">
     <div class="flt"><label>Genere<select id="fg">${opts(GEN, filt.gen, 'Tutti i generi')}</select></label><label>Stato<select id="fs">${opts(ST, filt.st, 'Tutti gli stati')}</select></label><label>Ordina<select id="so">${opts({recenti:'Più recenti', titolo:'Titolo A–Z', voto:'Voto'}, filt.so)}</select></label></div></div>
-    <p class="cnt" id="cnt"></p><div id="list"></div></main><button class="fab" id="add">＋ Aggiungi libro</button>`;
+    <div class="toolbar">
+      <p class="cnt" id="cnt"></p>
+      <div class="sel-tools">
+        ${selectMode ? `<button type="button" class="alt sm" id="selall">Seleziona visibili</button>` : ''}
+        ${books.length ? `<button type="button" class="${selectMode ? 'alt' : ''} sm" id="togglesel">${selectMode ? 'Annulla selezione' : 'Seleziona'}</button>` : ''}
+      </div>
+    </div>
+    <div id="list"></div></main>
+    <button class="fab" id="add">＋ Aggiungi libro</button>
+    <div class="bulkbar" id="bulkbar" hidden>
+      <span class="info" id="binfo">0 selezionati</span>
+      <div class="b-acts">
+        <button type="button" class="alt sm" id="bclear">Azzera</button>
+        <button type="button" class="sm" id="bedit">Modifica</button>
+      </div>
+    </div>`;
+
     $('#q').oninput = e => { filt.q = e.target.value; drawGrid(); };
     $('#fs').onchange = e => { filt.st = e.target.value; drawGrid(); };
     $('#fg').onchange = e => { filt.gen = e.target.value; drawGrid(); };
     $('#so').onchange = e => { filt.so = e.target.value; drawGrid(); };
     $('#add').onclick = () => location.hash = '#home';
+
+    if ($('#togglesel')) {
+      $('#togglesel').onclick = () => {
+        selectMode = !selectMode;
+        if (!selectMode) selectedIds.clear();
+        render();
+      };
+    }
+    if ($('#selall')) {
+      $('#selall').onclick = () => {
+        const vis = getFilteredBooks();
+        const allPicked = vis.every(b => selectedIds.has(String(b.id)));
+        vis.forEach(b => allPicked ? selectedIds.delete(String(b.id)) : selectedIds.add(String(b.id)));
+        drawGrid();
+      };
+    }
+    if ($('#bclear')) {
+      $('#bclear').onclick = () => { selectedIds.clear(); drawGrid(); };
+    }
+    if ($('#bedit')) {
+      $('#bedit').onclick = bulkForm;
+    }
+
     $('#list').onclick = e => {
-      const eb = e.target.closest('[data-e]'), db = e.target.closest('[data-d]'), r = e.target.closest('.bk');
-      if (eb) form(books.find(x => x.id == eb.dataset.e)); else if (db) delBook(db.dataset.d); else if (r) detail(r.dataset.id);
+      const r = e.target.closest('.bk');
+      if (!r) return;
+      if (selectMode) {
+        const id = r.dataset.id;
+        selectedIds.has(id) ? selectedIds.delete(id) : selectedIds.add(id);
+        drawGrid();
+        return;
+      }
+      const eb = e.target.closest('[data-e]'), db = e.target.closest('[data-d]');
+      if (eb) form(books.find(x => x.id == eb.dataset.e)); else if (db) delBook(db.dataset.d); else detail(r.dataset.id);
     };
     drawGrid();
   }
